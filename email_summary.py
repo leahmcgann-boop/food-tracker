@@ -1,4 +1,5 @@
-import os
+Here's the complete file exactly as it should be:
+pythonimport os
 import json
 import smtplib
 from email.mime.text import MIMEText
@@ -8,11 +9,10 @@ from google.oauth2 import service_account
 from datetime import datetime, timedelta
 
 # --- Configuration ---
-GMAIL_ADDRESS = "leahmcgann@gmail.com"
-GMAIL_APP_PASSWORD = "amio yiqe romt gdhg"
+GMAIL_ADDRESS = os.environ.get("GMAIL_ADDRESS")
+GMAIL_APP_PASSWORD = os.environ.get("GMAIL_APP_PASSWORD")
 RECIPIENT_EMAIL = "leahmcgann@gmail.com"
-SPREADSHEET_ID = os.environ.get("SPREADSHEET_ID", "1AGL8GN2kOKN44LxlWa5FwLdBud9Kh1iy47SChr2jlQw")
-CREDENTIALS_FILE = "credentials.json"
+SPREADSHEET_ID = os.environ.get("SPREADSHEET_ID")
 
 # --- Get yesterday's date ---
 def get_yesterday():
@@ -21,18 +21,17 @@ def get_yesterday():
 
 # --- Read daily totals from Google Sheets ---
 def get_daily_totals(date):
-    creds = service_account.Credentials.from_service_account_file(
-        CREDENTIALS_FILE,
+    creds_json = json.loads(os.environ.get("GOOGLE_CREDENTIALS"))
+    creds = service_account.Credentials.from_service_account_info(
+        creds_json,
         scopes=["https://www.googleapis.com/auth/spreadsheets"]
     )
     service = build("sheets", "v4", credentials=creds)
     sheets = service.spreadsheets()
-
     result = sheets.values().get(
         spreadsheetId=SPREADSHEET_ID,
         range="Daily Totals!A2:I1000"
     ).execute()
-
     rows = result.get("values", [])
     for row in rows:
         if row and row[0] == date:
@@ -70,7 +69,6 @@ Have a great day!
     msg["To"] = RECIPIENT_EMAIL
     msg["Subject"] = subject
     msg.attach(MIMEText(body, "plain"))
-
     with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
         server.login(GMAIL_ADDRESS, GMAIL_APP_PASSWORD)
         server.sendmail(GMAIL_ADDRESS, RECIPIENT_EMAIL, msg.as_string())
