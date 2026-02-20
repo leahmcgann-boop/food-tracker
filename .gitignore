@@ -1,0 +1,6 @@
+credentials.json
+venv/
+package/
+food-tracker.zip
+set_env.py
+*.txt
