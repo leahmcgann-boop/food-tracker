@@ -4,17 +4,20 @@ import anthropic
 from googleapiclient.discovery import build
 from google.oauth2 import service_account
 from datetime import datetime
+from flask import Flask, request, jsonify
+
+app = Flask(__name__)
 
 # --- Configuration ---
 ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY")
-SPREADSHEET_ID = "1AGL8GN2kOKN44LxlWa5FwLdBud9Kh1iy47SChr2jlQw"
-CREDENTIALS_FILE = "credentials.json"
+SPREADSHEET_ID = os.environ.get("SPREADSHEET_ID")
 SHEET_NAME = "Log"
 
 # --- Set up Google Sheets connection ---
 def get_sheets_client():
-    creds = service_account.Credentials.from_service_account_file(
-        CREDENTIALS_FILE,
+    creds_json = json.loads(os.environ.get("GOOGLE_CREDENTIALS"))
+    creds = service_account.Credentials.from_service_account_info(
+        creds_json,
         scopes=["https://www.googleapis.com/auth/spreadsheets"]
     )
     service = build("sheets", "v4", credentials=creds)
@@ -65,12 +68,34 @@ def log_to_sheet(meal_data):
         body={"values": row}
     ).execute()
 
-# --- Main ---
+# --- Web endpoint ---
+@app.route("/log", methods=["POST"])
+def log_meal():
+    try:
+        data = request.get_json()
+        entry = data.get("entry", "")
+        if not entry:
+            return jsonify({"error": "No food entry provided"}), 400
+        meal_data = parse_meal(entry)
+        log_to_sheet(meal_data)
+        return jsonify({"message": "Logged successfully!", "meal": meal_data})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 if __name__ == "__main__":
-    entry = input("What did you eat? ")
-    print("Analyzing...")
-    meal_data = parse_meal(entry)
-    print(f"\nLogged: {meal_data['description']}")
-    print(f"Calories: {meal_data['calories']} | Protein: {meal_data['protein']}g | Carbs: {meal_data['carbs']}g | Fat: {meal_data['fat']}g | Fiber: {meal_data['fiber']}g")
-    log_to_sheet(meal_data)
-    print("\n✓ Saved to Google Sheets!")
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
+```
+
+Save and close. Then add Flask to requirements.txt:
+```
+notepad requirements.txt
+```
+
+Add `flask` so it looks like:
+```
+anthropic
+google-auth
+google-auth-oauthlib
+google-api-python-client
+flask
