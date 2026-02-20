@@ -85,17 +85,4 @@ def log_meal():
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
-```
 
-Save and close. Then add Flask to requirements.txt:
-```
-notepad requirements.txt
-```
-
-Add `flask` so it looks like:
-```
-anthropic
-google-auth
-google-auth-oauthlib
-google-api-python-client
-flask
