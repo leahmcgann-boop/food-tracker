@@ -1,4 +1,3 @@
-Here's the complete file exactly as it should be:
 pythonimport os
 import json
 import smtplib
