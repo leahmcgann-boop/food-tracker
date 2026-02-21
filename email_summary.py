@@ -15,7 +15,7 @@ SPREADSHEET_ID = os.environ.get("SPREADSHEET_ID")
 
 # --- Get yesterday's date ---
 def get_yesterday():
-    yesterday = datetime.now()
+    yesterday = datetime.now() - timedelta(days=1)
     return yesterday.strftime("%Y-%m-%d")
 
 # --- Read daily totals from Google Sheets ---
