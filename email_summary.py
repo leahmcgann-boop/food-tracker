@@ -69,10 +69,10 @@ Have a great day!
     msg["Subject"] = subject
     msg.attach(MIMEText(body, "plain"))
     with smtplib.SMTP("smtp.gmail.com", 587) as server:
-    server.ehlo()
-    server.starttls()
-    server.login(GMAIL_ADDRESS, GMAIL_APP_PASSWORD)
-    server.sendmail(GMAIL_ADDRESS, RECIPIENT_EMAIL, msg.as_string())
+        server.ehlo()
+        server.starttls()
+        server.login(GMAIL_ADDRESS, GMAIL_APP_PASSWORD)
+        server.sendmail(GMAIL_ADDRESS, RECIPIENT_EMAIL, msg.as_string())
     print("Email sent successfully!")
 
 # --- Main ---
