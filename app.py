@@ -66,7 +66,7 @@ def log_to_sheet(meal_data):
     sheets.values().append(
         spreadsheetId=SPREADSHEET_ID,
         range=f"{SHEET_NAME}!A:I",
-        valueInputOption="RAW",
+        valueInputOption="USER_ENTERED",
         body={"values": row}
     ).execute()
 
