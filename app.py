@@ -49,7 +49,9 @@ User entry: {entry}"""
 # --- Write the row to Google Sheets ---
 def log_to_sheet(meal_data):
     sheets = get_sheets_client()
-    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M")
+    from datetime import timezone, timedelta
+    est = timezone(timedelta(hours=-5))
+    timestamp = datetime.now(est).strftime("%Y-%m-%d %H:%M")
     row = [[
         timestamp,
         meal_data["meal_type"],
