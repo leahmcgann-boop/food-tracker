@@ -34,8 +34,7 @@ def parse_meal(entry):
                 "role": "user",
                 "content": f"""You are a nutrition tracking assistant. The user will describe what they ate.
 Extract the meal type (breakfast/lunch/dinner/snack), a clean description, and estimate
-calories, protein (g), carbs (g), fat (g), and fiber (g). Be concise and realistic with estimates.
-Return only valid JSON in this exact format with no other text:
+calories, protein (g), carbs (g), fat (g), unsaturated fat (g), and fiber (g). Be concise and realistic with estimates. Return only valid JSON in this exact format with no other text:
 {{"meal_type": "", "description": "", "calories": 0, "protein": 0, "carbs": 0, "fat": 0, "unsaturated_fat": 0, "fiber": 0, "notes": ""}}
 
 User entry: {entry}"""
