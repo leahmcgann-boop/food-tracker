@@ -36,7 +36,7 @@ def parse_meal(entry):
 Extract the meal type (breakfast/lunch/dinner/snack), a clean description, and estimate
 calories, protein (g), carbs (g), fat (g), and fiber (g). Be concise and realistic with estimates.
 Return only valid JSON in this exact format with no other text:
-{{"meal_type": "", "description": "", "calories": 0, "protein": 0, "carbs": 0, "fat": 0, "fiber": 0, "notes": ""}}
+{{"meal_type": "", "description": "", "calories": 0, "protein": 0, "carbs": 0, "fat": 0, "unsaturated_fat": 0, "fiber": 0, "notes": ""}}
 
 User entry: {entry}"""
             }
@@ -60,12 +60,13 @@ def log_to_sheet(meal_data):
         meal_data["protein"],
         meal_data["carbs"],
         meal_data["fat"],
+	meal_data["unsaturated_fat"],
         meal_data["fiber"],
         meal_data["notes"]
     ]]
     sheets.values().append(
         spreadsheetId=SPREADSHEET_ID,
-        range=f"{SHEET_NAME}!A:I",
+        range=f"{SHEET_NAME}!A:J",
         valueInputOption="USER_ENTERED",
         body={"values": row}
     ).execute()
