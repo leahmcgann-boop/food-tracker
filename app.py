@@ -72,6 +72,7 @@ def log_to_sheet(meal_data):
 
 # --- Web endpoint ---
 @app.route("/log", methods=["POST"])
+@app.route("/log", methods=["POST"])
 def log_meal():
     try:
         data = request.get_json()
@@ -82,7 +83,10 @@ def log_meal():
         log_to_sheet(meal_data)
         return jsonify({"message": "Logged successfully!", "meal": meal_data})
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        import traceback
+        error_details = traceback.format_exc()
+        print(f"ERROR: {error_details}")
+        return jsonify({"error": str(e), "details": error_details}), 500
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
